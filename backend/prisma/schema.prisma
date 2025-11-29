@@ -1,0 +1,179 @@
+// Prisma schema for multi-tenant Shopify ingestion
+// Run: npx prisma init (already structured here) and prisma migrate dev
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id           String   @id @default(uuid())
+  storeDomain  String   @unique
+  name         String?
+  status       String   @default("active")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  credentials  ShopifyCredential[]
+  users        TenantUser[]
+  customers    Customer[]
+  products     Product[]
+  orders       Order[]
+  lineItems    OrderLineItem[]
+  events       Event[]
+  syncJobs     SyncJob[]
+}
+
+model ShopifyCredential {
+  id            String   @id @default(uuid())
+  tenantId      String   @unique
+  accessToken   String
+  scopes        String
+  apiVersion    String   @default("2024-10")
+  storefrontToken String?
+  installedAt   DateTime @default(now())
+
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  tenants   TenantUser[]
+}
+
+model TenantUser {
+  tenantId String
+  userId   String
+  role     String   @default("viewer")
+  
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@id([tenantId, userId])
+}
+
+model Customer {
+  id            String   @id @default(uuid())
+  tenantId      String
+  shopifyId     BigInt
+  email         String?
+  firstName     String?
+  lastName      String?
+  totalSpentCents Int      @default(0)
+  currency      String     @default("USD")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  deletedAt     DateTime?
+
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  orders        Order[]
+
+  @@unique([tenantId, shopifyId])
+  @@index([tenantId, email])
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  tenantId    String
+  shopifyId   BigInt
+  title       String
+  status      String?
+  productType String?
+  vendor      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  lineItems   OrderLineItem[]
+
+  @@unique([tenantId, shopifyId])
+}
+
+model Order {
+  id               String   @id @default(uuid())
+  tenantId         String
+  shopifyId        BigInt
+  customerId       String?
+  name             String?
+  status           String?
+  financialStatus  String?
+  fulfillmentStatus String?
+  subtotalCents    Int      @default(0)
+  totalCents       Int      @default(0)
+  taxCents         Int      @default(0)
+  currency         String   @default("USD")
+  createdAt        DateTime @default(now())
+  processedAt      DateTime?
+  updatedAt        DateTime @updatedAt
+  canceledAt       DateTime?
+
+  tenant     Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  lineItems  OrderLineItem[]
+
+  @@unique([tenantId, shopifyId])
+  @@index([tenantId, createdAt])
+  @@index([tenantId, customerId])
+}
+
+model OrderLineItem {
+  id         String  @id @default(uuid())
+  tenantId   String
+  orderId    String
+  shopifyId  BigInt
+  productId  String?
+  title      String?
+  quantity   Int
+  priceCents Int     @default(0)
+  totalCents Int     @default(0)
+  sku        String?
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order    Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product  Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@unique([tenantId, orderId, shopifyId])
+  @@index([productId])
+  @@index([tenantId])
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  tenantId    String
+  topic       String
+  entityType  String?
+  entityId    String?
+  payloadJson String
+  webhookId   String?
+  storeDomain String
+  receivedAt  DateTime @default(now())
+  processedAt DateTime?
+  status      String   @default("received")
+  errorMsg    String?
+
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, webhookId])
+}
+
+model SyncJob {
+  id        String   @id @default(uuid())
+  tenantId  String
+  type      String   // full|delta|rehydrate
+  status    String   @default("pending")
+  startedAt DateTime @default(now())
+  finishedAt DateTime?
+  cursor    String?
+  errorMsg  String?
+
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+}

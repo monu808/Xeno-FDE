@@ -1,0 +1,28 @@
+{
+  "name": "xeno-fde-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "prisma": "prisma",
+    "migrate": "prisma migrate dev",
+    "seed": "node prisma/seed.js",
+    "lint": "echo 'no lint yet'"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "prisma": "^5.16.1",
+    "@prisma/client": "^5.16.1",
+    "node-fetch": "^3.3.2",
+    "crypto": "^1.0.1"
+  }
+}
