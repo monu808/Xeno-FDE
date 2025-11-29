@@ -69,7 +69,7 @@ app.get('/api/metrics/products/top', getTopProducts);
 const port = process.env.PORT || 3001;
 
 // For local development
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' && process.env.VERCEL !== '1') {
   app.listen(port, () => {
     console.log(`Backend listening on port ${port}`);
   });
