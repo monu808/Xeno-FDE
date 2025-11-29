@@ -67,6 +67,13 @@ app.get('/api/metrics/customers/top', getTopCustomers);
 app.get('/api/metrics/products/top', getTopProducts);
 
 const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log(`Backend listening on port ${port}`);
-});
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.log(`Backend listening on port ${port}`);
+  });
+}
+
+// Export for Vercel serverless
+export default app;

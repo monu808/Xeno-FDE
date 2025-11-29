@@ -9,6 +9,5 @@ build/
 out/
 .vercel/
 .turbo/
-prisma/migrations/
 coverage/
 *.tsbuildinfo
