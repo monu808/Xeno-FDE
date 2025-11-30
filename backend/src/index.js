@@ -19,7 +19,15 @@ const app = express();
 const prisma = new PrismaClient();
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://xeno-fde-dashboard.vercel.app',
+    'https://xeno-fde-dashboard-3zfe8gdpz-narendra-singhs-projects-90b1d8d1.vercel.app',
+    /https:\/\/xeno-fde-dashboard-.*\.vercel\.app$/
+  ],
+  credentials: true
+}));
 
 // Raw body for webhook HMAC verification
 app.use('/webhooks/shopify', express.raw({ type: 'application/json' }), (req, res, next) => {
@@ -29,6 +37,22 @@ app.use('/webhooks/shopify', express.raw({ type: 'application/json' }), (req, re
 
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan('dev'));
+
+// Root route
+app.get('/', (_req, res) => {
+  res.json({ 
+    name: 'Xeno FDE Backend API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      auth: '/auth/start',
+      metrics: '/api/metrics/*',
+      ingestion: '/api/ingestion/start',
+      webhooks: '/webhooks/shopify'
+    }
+  });
+});
 
 app.get('/health', async (_req, res) => {
   try {
