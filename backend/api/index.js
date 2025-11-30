@@ -1,3 +1,7 @@
 import app from '../src/index.js';
 
-export default app;
+// Vercel serverless function handler
+export default async (req, res) => {
+  return app(req, res);
+};
+
