@@ -7,6 +7,7 @@ export const metadata = {
   title: 'Xeno FDE - Shopify Insights',
   description: 'Multi-tenant Shopify data ingestion and insights dashboard',
   viewport: 'width=device-width, initial-scale=1',
+  robots: 'noindex, nofollow',
 };
 
 export default function RootLayout({ children }) {
