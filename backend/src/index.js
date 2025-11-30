@@ -20,12 +20,7 @@ const prisma = new PrismaClient();
 
 app.use(helmet());
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://xeno-fde-dashboard.vercel.app',
-    'https://xeno-fde-dashboard-3zfe8gdpz-narendra-singhs-projects-90b1d8d1.vercel.app',
-    /https:\/\/xeno-fde-dashboard-.*\.vercel\.app$/
-  ],
+  origin: true,
   credentials: true
 }));
 
