@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
 
-export default function CustomersPage() {
+function CustomersContent() {
   const searchParams = useSearchParams();
   const tenantId = searchParams.get('tenant_id');
   const [topCustomers, setTopCustomers] = useState([]);
@@ -68,5 +68,13 @@ export default function CustomersPage() {
         </table>
       )}
     </div>
+  );
+}
+
+export default function CustomersPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: '2rem' }}>Loading...</div>}>
+      <CustomersContent />
+    </Suspense>
   );
 }
