@@ -74,5 +74,8 @@ app.get('/api/metrics/overview', async (req, res) => {
   }
 });
 
-export default app;
+// Vercel serverless handler - wrap Express app
+export default (req, res) => {
+  return app(req, res);
+};
 
