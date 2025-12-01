@@ -11,8 +11,14 @@ const prisma = new PrismaClient();
 
 app.use(helmet());
 app.use(cors({
-  origin: true,
-  credentials: true
+  origin: [
+    'http://localhost:3000',
+    'https://xeno-fde-dashboard.vercel.app',
+    /^https:\/\/xeno-fde-dashboard.*\.vercel\.app$/
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json({ limit: '1mb' }));
