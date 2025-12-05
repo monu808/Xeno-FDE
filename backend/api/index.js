@@ -64,12 +64,11 @@ app.get('/api/metrics/overview', async (req, res) => {
     
     console.log('Orders:', orders.length, 'First order:', orders[0]);
     
+    // totalCents is stored as integer (cents), convert to dollars
     const totalRevenue = orders.reduce((sum, order) => {
-      // Handle both string and Decimal types
-      const priceStr = order.totalPrice?.toString() || '0';
-      const price = parseFloat(priceStr) || 0;
-      console.log('Order price:', order.totalPrice, '-> parsed:', price);
-      return sum + price;
+      const priceInDollars = (order.totalCents || 0) / 100;
+      console.log('Order totalCents:', order.totalCents, '-> dollars:', priceInDollars);
+      return sum + priceInDollars;
     }, 0);
     const totalOrders = orders.length;
     const totalCustomers = customers.length;
