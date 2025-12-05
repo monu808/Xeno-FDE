@@ -62,13 +62,20 @@ app.get('/api/metrics/overview', async (req, res) => {
       where: { tenantId: tenant_id }
     });
     
+    console.log('Orders:', orders.length, 'First order:', orders[0]);
+    
     const totalRevenue = orders.reduce((sum, order) => {
-      const price = parseFloat(order.totalPrice) || 0;
+      // Handle both string and Decimal types
+      const priceStr = order.totalPrice?.toString() || '0';
+      const price = parseFloat(priceStr) || 0;
+      console.log('Order price:', order.totalPrice, '-> parsed:', price);
       return sum + price;
     }, 0);
     const totalOrders = orders.length;
     const totalCustomers = customers.length;
     const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+    
+    console.log('Total revenue:', totalRevenue, 'Avg:', avgOrderValue);
     
     res.json({
       totalRevenue: totalRevenue.toFixed(2),
@@ -79,6 +86,7 @@ app.get('/api/metrics/overview', async (req, res) => {
       averageOrderValueFormatted: avgOrderValue.toFixed(2)
     });
   } catch (error) {
+    console.error('Error in /api/metrics/overview:', error);
     res.status(500).json({ error: error.message });
   }
 });
