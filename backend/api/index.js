@@ -62,7 +62,10 @@ app.get('/api/metrics/overview', async (req, res) => {
       where: { tenantId: tenant_id }
     });
     
-    const totalRevenue = orders.reduce((sum, order) => sum + parseFloat(order.totalPrice), 0);
+    const totalRevenue = orders.reduce((sum, order) => {
+      const price = parseFloat(order.totalPrice) || 0;
+      return sum + price;
+    }, 0);
     const totalOrders = orders.length;
     const totalCustomers = customers.length;
     const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
