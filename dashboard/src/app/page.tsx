@@ -74,28 +74,72 @@ export default function Home() {
       </div>
 
       {metrics && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-          <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px' }}>
-            <h3 style={{ fontSize: '0.875rem', color: '#666', fontWeight: 'normal' }}>Total Orders</h3>
-            <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0.5rem 0 0' }}>{metrics.totalOrders}</p>
+        <>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+            <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+              <h3 style={{ fontSize: '0.875rem', color: '#666', fontWeight: 'normal' }}>Total Orders</h3>
+              <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0.5rem 0 0' }}>{metrics.totalOrders}</p>
+            </div>
+            <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+              <h3 style={{ fontSize: '0.875rem', color: '#666', fontWeight: 'normal' }}>Total Revenue</h3>
+              <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0.5rem 0 0' }}>
+                ${metrics.totalRevenueFormatted}
+              </p>
+            </div>
+            <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+              <h3 style={{ fontSize: '0.875rem', color: '#666', fontWeight: 'normal' }}>Total Customers</h3>
+              <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0.5rem 0 0' }}>{metrics.totalCustomers}</p>
+            </div>
+            <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+              <h3 style={{ fontSize: '0.875rem', color: '#666', fontWeight: 'normal' }}>Avg Order Value</h3>
+              <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0.5rem 0 0' }}>
+                ${metrics.averageOrderValueFormatted}
+              </p>
+            </div>
           </div>
-          <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px' }}>
-            <h3 style={{ fontSize: '0.875rem', color: '#666', fontWeight: 'normal' }}>Total Revenue</h3>
-            <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0.5rem 0 0' }}>
-              ${metrics.totalRevenueFormatted}
-            </p>
+
+          <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <Link 
+              href={`/customers?tenant_id=${tenantId}`}
+              style={{
+                flex: '1',
+                minWidth: '250px',
+                background: 'white',
+                padding: '1.5rem',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                color: 'inherit',
+                border: '2px solid transparent',
+                transition: 'border-color 0.2s',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.borderColor = '#0070f3'}
+              onMouseOut={(e) => e.currentTarget.style.borderColor = 'transparent'}
+            >
+              <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#0070f3' }}>👥 Top Customers</h3>
+              <p style={{ color: '#666', fontSize: '0.9rem' }}>View customers ranked by total spending</p>
+            </Link>
+
+            <Link 
+              href={`/products?tenant_id=${tenantId}`}
+              style={{
+                flex: '1',
+                minWidth: '250px',
+                background: 'white',
+                padding: '1.5rem',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                color: 'inherit',
+                border: '2px solid transparent',
+                transition: 'border-color 0.2s',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.borderColor = '#0070f3'}
+              onMouseOut={(e) => e.currentTarget.style.borderColor = 'transparent'}
+            >
+              <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#0070f3' }}>📦 Top Products</h3>
+              <p style={{ color: '#666', fontSize: '0.9rem' }}>View best-selling products by revenue</p>
+            </Link>
           </div>
-          <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px' }}>
-            <h3 style={{ fontSize: '0.875rem', color: '#666', fontWeight: 'normal' }}>Total Customers</h3>
-            <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0.5rem 0 0' }}>{metrics.totalCustomers}</p>
-          </div>
-          <div style={{ background: 'white', padding: '1.5rem', borderRadius: '8px' }}>
-            <h3 style={{ fontSize: '0.875rem', color: '#666', fontWeight: 'normal' }}>Avg Order Value</h3>
-            <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0.5rem 0 0' }}>
-              ${metrics.averageOrderValueFormatted}
-            </p>
-          </div>
-        </div>
+        </>
       )}
 
       <div style={{ marginTop: '2rem', background: 'white', padding: '1.5rem', borderRadius: '8px' }}>
