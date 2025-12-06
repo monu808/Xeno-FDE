@@ -5,8 +5,8 @@
 A production-ready multi-tenant Shopify data ingestion and insights platform that connects to multiple Shopify stores, ingests customer/order/product data, and provides real-time analytics through a modern dashboard.
 
 🔗 **Live Demo:**
-- **Backend API:** https://xeno-fde-backend-rfkz4lmko-narendra-singhs-projects-90b1d8d1.vercel.app
-- **Dashboard:** https://xeno-fde-dashboard-4ulok47dn-narendra-singhs-projects-90b1d8d1.vercel.app
+- **Backend API:** https://xeno-fde-backend.vercel.app/
+- **Dashboard:** https://xeno-fde-dashboard.vercel.app/
 - **Test Tenant ID:** `c19dfaaf-19e0-43c1-8d7d-5de83855d427`
 
 ## 📦 Project Structure
